@@ -4,7 +4,9 @@ iPhone 独立离线版三维动物轮盘游戏。
 
 ## iPhone 安装
 
-1. 使用 Safari 打开 GitHub Pages 游戏地址。
+游戏地址：<https://linan700.github.io/forest-animal-arcade/>
+
+1. 使用 Safari 打开上面的游戏地址。
 2. 等待游戏完整显示后停留约 10 秒。
 3. 点击 Safari 的“分享”，选择“添加到主屏幕”。
 4. 从主屏幕横屏启动游戏。
