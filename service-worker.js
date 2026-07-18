@@ -1,13 +1,13 @@
 "use strict";
 
-const CACHE_NAME = "forest-animal-arcade-iphone-offline-20260717k";
+const CACHE_NAME = "forest-animal-arcade-iphone-offline-20260718l";
 const APP_FILES = [
   "./",
   "./index.html",
-  "./styles.css?v=20260717k",
-  "./game.js?v=20260717k",
-  "./three-scene.bundle.js?v=20260717k",
-  "./manifest.webmanifest?v=20260717k",
+  "./styles.css?v=20260718l",
+  "./game.js?v=20260718l",
+  "./three-scene.bundle.js?v=20260718l",
+  "./manifest.webmanifest?v=20260718l",
   "./assets/forest-bg.webp",
   "./assets/lion.webp",
   "./assets/panda.webp",

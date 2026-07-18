@@ -770,6 +770,10 @@ body .topbar {
   gap: 7px;
 }
 
+.mobile-sound-toggle {
+  display: none;
+}
+
 .balance-display {
   min-width: 0;
   padding: 7px 6px 6px;
@@ -1325,8 +1329,28 @@ body.portrait-bypass .rotate-device {
   }
 
   .balance-and-chips {
-    grid-template-columns: 64px minmax(0, 1fr);
+    grid-template-columns: 62px 32px minmax(0, 1fr);
     gap: 3px;
+  }
+
+  .mobile-sound-toggle {
+    min-width: 0;
+    height: 38px;
+    padding: 0;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(255, 226, 111, 0.72);
+    border-radius: 4px;
+    background: #173f49;
+    color: #fff0ad;
+    font-size: 18px;
+    font-weight: 900;
+  }
+
+  .mobile-sound-toggle[aria-pressed="false"] {
+    border-color: rgba(255, 87, 107, 0.72);
+    background: #4d1a25;
+    color: #ffb2bd;
   }
 
   .balance-display {

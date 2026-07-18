@@ -41,6 +41,7 @@ let spinning = false;
 let activeIndex = -1;
 let toastTimer = null;
 let audioContext = null;
+const audioVolumeScale = window.matchMedia?.("(pointer: coarse)").matches ? 1.8 : 1;
 
 const elements = {
   balance: document.querySelector("#balanceAmount"),
@@ -67,6 +68,7 @@ const elements = {
   repeatButton: document.querySelector("#repeatButton"),
   spinButton: document.querySelector("#spinButton"),
   soundToggle: document.querySelector("#soundToggle"),
+  mobileSoundToggle: document.querySelector("#mobileSoundToggle"),
   gameOverOverlay: document.querySelector("#gameOverOverlay"),
   exitGameButton: document.querySelector("#exitGameButton"),
   toast: document.querySelector("#toast")
@@ -284,8 +286,11 @@ function renderState() {
   elements.clearButton.disabled = spinning || gameOver || totalBet() === 0;
   elements.repeatButton.disabled = spinning || gameOver || Object.keys(state.lastBets).length === 0;
   elements.spinButton.disabled = spinning || gameOver || totalBet() === 0;
-  elements.soundToggle.textContent = state.sound ? "♪" : "×";
-  elements.soundToggle.setAttribute("aria-pressed", state.sound ? "true" : "false");
+  [elements.soundToggle, elements.mobileSoundToggle].forEach(button => {
+    if (!button) return;
+    button.textContent = state.sound ? "♪" : "×";
+    button.setAttribute("aria-pressed", state.sound ? "true" : "false");
+  });
 
   document.querySelectorAll(".chip").forEach(chip => {
     chip.classList.toggle("active", Number(chip.dataset.chip) === state.selectedChip);
@@ -525,8 +530,16 @@ function showGameOver() {
 
 function getAudioContext() {
   if (!state.sound) return null;
-  audioContext ||= new (window.AudioContext || window.webkitAudioContext)();
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return null;
+  audioContext ||= new AudioContextClass({ latencyHint: "interactive" });
   return audioContext;
+}
+
+async function unlockAudio() {
+  const context = getAudioContext();
+  if (!context || context.state === "running") return;
+  await context.resume().catch(() => {});
 }
 
 function tone(frequency, duration, type = "sine", volume = 0.035, delay = 0) {
@@ -537,7 +550,7 @@ function tone(frequency, duration, type = "sine", volume = 0.035, delay = 0) {
   const startTime = context.currentTime + delay;
   oscillator.type = type;
   oscillator.frequency.setValueAtTime(frequency, startTime);
-  gain.gain.setValueAtTime(volume, startTime);
+  gain.gain.setValueAtTime(Math.min(volume * audioVolumeScale, 0.12), startTime);
   gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
   oscillator.connect(gain).connect(context.destination);
   oscillator.start(startTime);
@@ -571,12 +584,20 @@ elements.chipSelector.addEventListener("click", event => {
 elements.clearButton.addEventListener("click", () => clearBets());
 elements.repeatButton.addEventListener("click", repeatLastBets);
 elements.spinButton.addEventListener("click", spin);
-elements.soundToggle.addEventListener("click", () => {
+async function toggleSound() {
   state.sound = !state.sound;
   saveState();
   renderState();
-  if (state.sound) tone(620, 0.08, "sine", 0.03);
-});
+  if (state.sound) {
+    await unlockAudio();
+    tone(620, 0.1, "sine", 0.055);
+  }
+}
+
+elements.soundToggle.addEventListener("click", toggleSound);
+elements.mobileSoundToggle?.addEventListener("click", toggleSound);
+document.addEventListener("pointerdown", unlockAudio, { capture: true });
+document.addEventListener("touchend", unlockAudio, { capture: true, passive: true });
 elements.exitGameButton.addEventListener("click", async () => {
   if (document.fullscreenElement) await document.exitFullscreen().catch(() => {});
   window.close();
