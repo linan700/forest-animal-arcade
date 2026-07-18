@@ -1221,15 +1221,18 @@ body.portrait-bypass .rotate-device {
     width: 100dvw;
     height: 100dvh;
     min-height: 0;
-    grid-template-rows: minmax(0, 1fr) 148px;
+    grid-template-columns: minmax(0, 70fr) minmax(230px, 30fr);
+    grid-template-rows: minmax(0, 1fr);
     overflow: hidden;
   }
 
   .play-area {
-    width: 100%;
-    height: auto;
+    grid-column: 1;
+    grid-row: 1;
+    width: auto;
+    height: 100dvh;
     min-height: 0;
-    padding: 0;
+    padding: 0 0 0 env(safe-area-inset-left);
     grid-template-columns: 1fr;
   }
 
@@ -1246,15 +1249,22 @@ body.portrait-bypass .rotate-device {
   }
 
   .bet-console {
-    height: 148px;
+    grid-column: 2;
+    grid-row: 1;
+    width: 100%;
+    height: 100dvh;
     min-height: 0;
     padding:
-      4px
+      calc(4px + env(safe-area-inset-top))
       calc(6px + env(safe-area-inset-right))
       calc(4px + env(safe-area-inset-bottom))
-      calc(6px + env(safe-area-inset-left));
-    grid-template-columns: minmax(0, 1fr) 292px;
-    gap: 6px;
+      6px;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) 124px;
+    gap: 5px;
+    border-top: 0;
+    border-left: 2px solid rgba(241, 201, 95, 0.65);
+    box-shadow: -10px 0 28px rgba(0, 0, 0, 0.36);
   }
 
   .bet-grid {
@@ -1262,12 +1272,12 @@ body.portrait-bypass .rotate-device {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     grid-template-rows: repeat(4, minmax(0, 1fr));
     grid-auto-rows: auto;
-    gap: 2px 3px;
+    gap: 3px;
   }
 
   .bet-cell {
     min-height: 0;
-    padding: 1px 3px;
+    padding: 2px;
     border-radius: 4px;
   }
 
@@ -1276,47 +1286,47 @@ body.portrait-bypass .rotate-device {
   }
 
   .bet-cell img {
-    left: 5px;
-    width: 24px;
-    height: 24px;
+    left: 3px;
+    width: 21px;
+    height: 21px;
   }
 
   .bet-cell-name {
-    top: 50%;
-    right: 66px;
-    left: 34px;
-    font-size: 10px;
-    transform: translateY(-50%);
+    top: 4px;
+    right: 22px;
+    left: 27px;
+    font-size: 9px;
+    transform: none;
   }
 
   .bet-cell-multiplier {
     top: 2px;
-    right: 4px;
-    font-size: 10px;
+    right: 3px;
+    font-size: 9px;
   }
 
   .bet-cell-amount {
     right: 3px;
-    bottom: 2px;
-    left: auto;
-    width: 58px;
-    min-height: 13px;
+    bottom: 3px;
+    left: 27px;
+    width: auto;
+    min-height: 15px;
     padding: 0 2px;
     border-radius: 2px;
     font-size: 9px;
-    line-height: 13px;
+    line-height: 15px;
   }
 
   .control-deck {
     min-width: 0;
     grid-template-columns: 1fr;
-    grid-template-rows: 43px minmax(0, 1fr);
-    gap: 4px;
+    grid-template-rows: 42px minmax(0, 1fr);
+    gap: 3px;
   }
 
   .balance-and-chips {
-    grid-template-columns: 70px minmax(0, 1fr);
-    gap: 4px;
+    grid-template-columns: 64px minmax(0, 1fr);
+    gap: 3px;
   }
 
   .balance-display {
@@ -1337,13 +1347,13 @@ body.portrait-bypass .rotate-device {
   }
 
   .chip-selector {
-    gap: 4px;
+    gap: 3px;
   }
 
   .chip {
-    height: 39px;
+    height: 38px;
     border-width: 2px;
-    font-size: 11px;
+    font-size: 10px;
   }
 
   .chip.active {
@@ -1352,14 +1362,14 @@ body.portrait-bypass .rotate-device {
   }
 
   .command-row {
-    gap: 4px;
+    gap: 3px;
   }
 
   .command {
     min-height: 0;
-    padding: 4px 7px;
+    padding: 3px 4px;
     border-radius: 4px;
-    font-size: 11px;
+    font-size: 10px;
   }
 
   .spin-button {
@@ -1397,9 +1407,12 @@ body.portrait-bypass .rotate-device {
   }
 
   .toast {
-    bottom: 154px;
+    right: calc(30vw + 10px);
+    bottom: 10px;
+    left: 35%;
     padding: 7px 12px;
     font-size: 11px;
+    transform: translateX(-50%);
   }
 
   .game-over {
