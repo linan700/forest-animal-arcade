@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#061632">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="森林动物园">
+  <title>森林动物乐园 - 经典4K重制版</title>
+  <link rel="manifest" href="manifest.webmanifest?v=20260717i">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="styles.css?v=20260717i">
+</head>
+<body>
+  <main class="game-shell" id="gameShell">
+    <div class="view-controls" aria-label="显示模式">
+      <button type="button" class="view-button" id="fullscreenToggle" aria-label="切换全屏和窗口模式" title="全屏 / 窗口模式">⛶</button>
+    </div>
+    <header class="topbar">
+      <div class="brand-block">
+        <span class="brand-kicker">本地娱乐版</span>
+        <h1>森林动物乐园</h1>
+      </div>
+      <div class="status-strip" aria-label="游戏状态">
+        <div class="stat balance-stat">
+          <span>余额</span>
+          <strong id="balanceTop">10,000元</strong>
+        </div>
+        <div class="stat">
+          <span>本局下注</span>
+          <strong id="totalBet">0</strong>
+        </div>
+        <div class="stat jackpot-stat">
+          <span>森林彩金</span>
+          <strong id="jackpot">10,000</strong>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="icon-button" id="soundToggle" type="button" aria-label="声音开关" title="声音开关">♪</button>
+      </div>
+    </header>
+
+    <section class="play-area">
+      <div class="wheel-panel">
+        <div class="wheel" id="wheel" aria-label="动物转盘">
+          <canvas id="threeCanvas" aria-hidden="true"></canvas>
+          <div class="three-loading" id="threeLoading">立体转盘载入中</div>
+          <div class="sector-layer" id="sectorLayer" aria-hidden="true"></div>
+          <div class="cinematic-fx" aria-hidden="true"></div>
+          <div class="cinematic-result" id="cinematicResult" aria-live="polite">
+            <span id="cinematicEyebrow"></span>
+            <strong id="cinematicTitle"></strong>
+          </div>
+          <div class="center-stage" id="centerStage">
+            <img id="resultAnimal" src="assets/lion.webp" alt="开奖结果">
+            <div class="result-copy">
+              <span id="roundState">请下注</span>
+              <strong id="resultName">等待开奖</strong>
+              <em id="resultPrize">虚拟积分娱乐</em>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="side-panel">
+        <section class="side-section">
+          <div class="section-heading">
+            <h2>最近开奖</h2>
+            <span id="roundCount">第 0 局</span>
+          </div>
+          <div class="history-list" id="historyList">
+            <div class="history-empty">尚无记录</div>
+          </div>
+        </section>
+        <section class="side-section payout-section">
+          <div class="section-heading">
+            <h2>基础倍率</h2>
+            <span>红 / 黄 / 绿</span>
+          </div>
+          <div class="payout-table" id="payoutTable"></div>
+        </section>
+        <div class="special-row">
+          <span>动物派对</span>
+          <span>同色狂欢</span>
+          <span>双倍时刻</span>
+        </div>
+      </aside>
+    </section>
+
+    <section class="bet-console">
+      <div class="bet-grid" id="betGrid" aria-label="下注区域"></div>
+      <div class="control-deck">
+        <div class="balance-and-chips">
+          <div class="balance-display" id="balanceDisplay" aria-label="当前余额">
+            <span>当前余额</span>
+            <strong><b id="balanceAmount">10,000</b><em>元</em></strong>
+          </div>
+          <div class="chip-selector" id="chipSelector" aria-label="选择筹码">
+            <button type="button" class="chip active" data-chip="10">10</button>
+            <button type="button" class="chip" data-chip="50">50</button>
+            <button type="button" class="chip" data-chip="100">100</button>
+            <button type="button" class="chip" data-chip="500">500</button>
+          </div>
+        </div>
+        <div class="command-row">
+          <button type="button" class="command secondary" id="clearButton">清除下注</button>
+          <button type="button" class="command secondary" id="repeatButton">重复上局</button>
+          <button type="button" class="command spin-button" id="spinButton">开始开奖</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <section class="game-over" id="gameOverOverlay" role="alertdialog" aria-modal="true" aria-labelledby="gameOverTitle" hidden>
+      <div class="game-over-panel">
+        <span>本局结束</span>
+        <h2 id="gameOverTitle">余额已经用完</h2>
+        <p>本次游戏不能继续下注。请关闭游戏窗口，重新打开后从10,000元开始。</p>
+        <button type="button" class="command danger" id="exitGameButton">退出游戏</button>
+      </div>
+    </section>
+  </main>
+
+  <div class="rotate-device" aria-label="请横屏使用">
+    <strong>↻</strong>
+    <span>请将手机横过来</span>
+  </div>
+
+  <script src="three-scene.bundle.js?v=20260717i"></script>
+  <script src="game.js?v=20260717i"></script>
+</body>
+</html>
