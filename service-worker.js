@@ -1,13 +1,13 @@
 "use strict";
 
-const CACHE_NAME = "forest-animal-arcade-iphone-offline-20260717i";
+const CACHE_NAME = "forest-animal-arcade-iphone-offline-20260717j";
 const APP_FILES = [
   "./",
   "./index.html",
-  "./styles.css?v=20260717i",
-  "./game.js?v=20260717i",
-  "./three-scene.bundle.js?v=20260717i",
-  "./manifest.webmanifest?v=20260717i",
+  "./styles.css?v=20260717j",
+  "./game.js?v=20260717j",
+  "./three-scene.bundle.js?v=20260717j",
+  "./manifest.webmanifest?v=20260717j",
   "./assets/forest-bg.webp",
   "./assets/lion.webp",
   "./assets/panda.webp",
@@ -33,6 +33,20 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET" || new URL(event.request.url).origin !== self.location.origin) return;
+
+  if (event.request.mode === "navigate") {
+    event.respondWith(
+      fetch(event.request).then((response) => {
+        if (response.ok) {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put("./index.html", copy));
+        }
+        return response;
+      }).catch(() => caches.match("./index.html"))
+    );
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then((cached) => {
       if (cached) return cached;
@@ -42,10 +56,7 @@ self.addEventListener("fetch", (event) => {
           caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
         }
         return response;
-      }).catch(() => {
-        if (event.request.mode === "navigate") return caches.match("./index.html");
-        return Response.error();
-      });
+      }).catch(() => Response.error());
     })
   );
 });

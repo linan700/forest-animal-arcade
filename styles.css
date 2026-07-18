@@ -1151,6 +1151,10 @@ dialog::backdrop {
   display: none;
 }
 
+body.portrait-bypass .rotate-device {
+  display: none !important;
+}
+
 @media (orientation: portrait) and (max-width: 900px) {
   .rotate-device {
     position: fixed;
@@ -1178,6 +1182,26 @@ dialog::backdrop {
   .rotate-device span {
     font-size: 18px;
     font-weight: 800;
+  }
+
+  .rotate-device small {
+    max-width: 280px;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .rotate-device button {
+    min-width: 168px;
+    min-height: 46px;
+    margin-top: 8px;
+    border: 1px solid rgba(255, 232, 137, 0.72);
+    border-radius: 6px;
+    background: #f3c94f;
+    color: #081631;
+    font-size: 16px;
+    font-weight: 900;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
   }
 }
 

@@ -608,6 +608,17 @@ if (isGameOver()) {
   saveState();
 }
 
+const continuePortraitButton = document.querySelector("#continuePortraitButton");
+
+if (sessionStorage.getItem("forestPortraitBypass") === "1") {
+  document.body.classList.add("portrait-bypass");
+}
+
+continuePortraitButton?.addEventListener("click", () => {
+  sessionStorage.setItem("forestPortraitBypass", "1");
+  document.body.classList.add("portrait-bypass");
+});
+
 if ("serviceWorker" in navigator && window.isSecureContext) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./service-worker.js").catch(() => {});
