@@ -42,6 +42,17 @@ let activeIndex = -1;
 let toastTimer = null;
 let audioContext = null;
 const audioVolumeScale = window.matchMedia?.("(pointer: coarse)").matches ? 1.8 : 1;
+const useFileAudio = /iPhone|iPad|iPod|MicroMessenger/i.test(navigator.userAgent)
+  || new URLSearchParams(window.location.search).get("audio") === "file";
+const fileAudio = useFileAudio ? Object.fromEntries(
+  ["tap", "tick", "error", "win", "jackpot"].map(name => {
+    const audio = new Audio(`assets/${name}.wav`);
+    audio.preload = "auto";
+    audio.playsInline = true;
+    return [name, audio];
+  })
+) : {};
+let fileAudioUnlocked = false;
 
 const elements = {
   balance: document.querySelector("#balanceAmount"),
@@ -536,13 +547,51 @@ function getAudioContext() {
   return audioContext;
 }
 
+async function unlockFileAudio() {
+  if (!useFileAudio || fileAudioUnlocked || !state.sound) return;
+  const results = await Promise.allSettled(Object.values(fileAudio).map(async audio => {
+    const previousVolume = audio.volume;
+    audio.volume = 0.001;
+    await audio.play();
+    audio.pause();
+    audio.currentTime = 0;
+    audio.volume = previousVolume;
+  }));
+  fileAudioUnlocked = results.some(result => result.status === "fulfilled");
+}
+
+function playFileSound(name, volume = 0.72, delay = 0) {
+  if (!state.sound || !useFileAudio || !fileAudio[name]) return;
+  const play = () => {
+    const audio = fileAudio[name];
+    audio.pause();
+    audio.currentTime = 0;
+    audio.volume = Math.max(0.05, Math.min(1, volume));
+    audio.play().catch(() => {});
+  };
+  if (delay > 0) {
+    window.setTimeout(play, delay * 1000);
+  } else {
+    play();
+  }
+}
+
 async function unlockAudio() {
+  if (useFileAudio) {
+    await unlockFileAudio();
+    return;
+  }
   const context = getAudioContext();
   if (!context || context.state === "running") return;
   await context.resume().catch(() => {});
 }
 
 function tone(frequency, duration, type = "sine", volume = 0.035, delay = 0) {
+  if (useFileAudio) {
+    const name = frequency < 220 ? "error" : frequency < 450 ? "tick" : "tap";
+    playFileSound(name, Math.min(1, volume * 14), delay);
+    return;
+  }
   const context = getAudioContext();
   if (!context) return;
   const oscillator = context.createOscillator();
@@ -564,6 +613,10 @@ function tickTone(step, total) {
 }
 
 function winTone(isJackpot) {
+  if (useFileAudio) {
+    playFileSound(isJackpot ? "jackpot" : "win", 0.9);
+    return;
+  }
   const notes = isJackpot ? [523, 659, 784, 1046, 1318] : [523, 659, 784, 1046];
   notes.forEach((note, index) => tone(note, 0.28, "triangle", 0.05, index * 0.1));
 }
@@ -590,7 +643,11 @@ async function toggleSound() {
   renderState();
   if (state.sound) {
     await unlockAudio();
-    tone(620, 0.1, "sine", 0.055);
+    if (useFileAudio) {
+      playFileSound("tap", 0.78);
+    } else {
+      tone(620, 0.1, "sine", 0.055);
+    }
   }
 }
 

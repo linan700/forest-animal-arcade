@@ -1,18 +1,23 @@
 "use strict";
 
-const CACHE_NAME = "forest-animal-arcade-iphone-offline-20260718l";
+const CACHE_NAME = "forest-animal-arcade-iphone-offline-20260718m";
 const APP_FILES = [
   "./",
   "./index.html",
-  "./styles.css?v=20260718l",
-  "./game.js?v=20260718l",
-  "./three-scene.bundle.js?v=20260718l",
-  "./manifest.webmanifest?v=20260718l",
+  "./styles.css?v=20260718m",
+  "./game.js?v=20260718m",
+  "./three-scene.bundle.js?v=20260718m",
+  "./manifest.webmanifest?v=20260718m",
   "./assets/forest-bg.webp",
   "./assets/lion.webp",
   "./assets/panda.webp",
   "./assets/monkey.webp",
   "./assets/rabbit.webp",
+  "./assets/tap.wav",
+  "./assets/tick.wav",
+  "./assets/error.wav",
+  "./assets/win.wav",
+  "./assets/jackpot.wav",
   "./assets/app-icon-512.png",
   "./assets/apple-touch-icon.png"
 ];
